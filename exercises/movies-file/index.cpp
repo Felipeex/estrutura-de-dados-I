@@ -19,8 +19,10 @@ int main() {
   int quantityOfMovies = 0, countDuration = 0;
   float averageDuration = 0;
 
-  const int QUANTITY_OF_YEARS = 20;
-  Year years[QUANTITY_OF_YEARS];
+  const int TF_QUANTITY_OF_YEARS = 20;
+  Year years[TF_QUANTITY_OF_YEARS];
+
+  int tlQuantiyOfYears = 0;
 
   do {
     fscanf(movies, "%[^,],%d,%[^,],%f,%f,%d,%f\n", movieName, &year, classfication, &spent, &income, &duration, &spectates);
@@ -39,23 +41,24 @@ int main() {
 
     int index = 0;
 
-    while(index < QUANTITY_OF_YEARS && years[index].year != year)
+    while(index < tlQuantiyOfYears && years[index].year != year)
       index++;
 
-    if (index < QUANTITY_OF_YEARS) {
+    if (index < tlQuantiyOfYears) {
       years[index].count++;
     } else {
       years[index].year = year;
       years[index].count = 1;
+      tlQuantiyOfYears++;
     }
 
     countDuration += duration;
     quantityOfMovies++;
   } while((!feof(movies)));
 
-  for(int index = 0; index < QUANTITY_OF_YEARS; index++) {
+  for(int index = 0; index < tlQuantiyOfYears; index++) {
     if (years[index].year) {
-      printf("%d %d", years[index].year, years[index].count);
+      printf("%d - %d\n", years[index].year, years[index].count);
     }
   }
 
