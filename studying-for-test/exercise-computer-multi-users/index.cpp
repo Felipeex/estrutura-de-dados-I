@@ -61,8 +61,6 @@ int main() {
 
       exibirFila(fila);
     }
-    
-    Sleep(1000);
   } while(!filaEstaVazia(fila) || (!feof(arquivoTransacoes) && arquivoTransacoes != NULL));
   gerandoTempoMedioDeEsperaTransacoes(transacoesFinalizadas, quantidadeDeTransacoesFinalizadas);
 }
@@ -107,5 +105,5 @@ void gerandoTempoMedioDeEsperaTransacoes(Transacao transacoesFinalizadas[quantid
     totalTempoMedioDeEspera += transacao.tempoEspera;
   }
 
-  printf("\nTempo medio de espera: %.2f", (float) totalTempoMedioDeEspera / quantidadeDeTransacoesFinalizadas);
+  printf("\nTempo medio de espera: %.2fu", (float) totalTempoMedioDeEspera / quantidadeDeTransacoesFinalizadas);
 }
