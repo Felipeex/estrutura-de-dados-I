@@ -58,7 +58,7 @@ int main() {
 
       exibirFila(fila);
     }
-    Sleep(1);
+    Sleep(1000);
   } while(!feof(arquivoTransacoes) && arquivoTransacoes != NULL);
 
   gerandoTempoMedioDeEsperaTransacoes(fila.transacoes, fila.quantidade);
