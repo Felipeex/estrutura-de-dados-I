@@ -1,8 +1,8 @@
 #include <stdio.h>
+#include <windows.h>
 #include "headers/fila-circular-com-prioridade.h"
 // #include "headers/fila-com-prioridade.h"
 
-#include <windows.h>
 
 Transacao lerTransacao(FILE * arquivoTransacoes);
 void tempoDeEsperaTransacoes(Transacao transacoes[quantidadeDeTransacoesMaxima]);
@@ -61,14 +61,14 @@ int main() {
 
       exibirFila(fila);
     }
-    // Sleep(1000);
+    
+    Sleep(1000);
   } while(!filaEstaVazia(fila) || (!feof(arquivoTransacoes) && arquivoTransacoes != NULL));
   gerandoTempoMedioDeEsperaTransacoes(transacoesFinalizadas, quantidadeDeTransacoesFinalizadas);
 }
 
 Transacao lerTransacao(FILE * arquivoTransacoes) {
   Transacao transacao;
-
   fscanf(arquivoTransacoes, "%d,%[^,],%d,%d", &transacao.IdUsuario, &transacao.nomeTransacao, &transacao.prioridade, &transacao.duracao);
 
   transacao.estaProcessando = 0; // false
