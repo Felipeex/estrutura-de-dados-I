@@ -33,6 +33,7 @@ void exibirFila(filaComPrioridade fila);
 
 void inicializarFila(filaComPrioridade &fila) {
   fila.fim = -1;
+  fila.quantidade = 0;
 }
 
 void inserirFila(filaComPrioridade &fila, Transacao transacao) {
@@ -63,8 +64,16 @@ char filaEstaVazia(filaComPrioridade fila) {
   return fila.fim < 0;
 }
 
+char filaEstaCheia(filaComPrioridade fila) {
+  return fila.quantidade == quantidadeDeTransacoesMaxima;
+}
+
 Transacao filaElementoInicio(filaComPrioridade fila) {
   return fila.transacoes[0];
+}
+
+Transacao filaElementoFim(filaComPrioridade fila) {
+  return fila.transacoes[fila.fim];
 }
 
 void exibirFila(filaComPrioridade fila) {

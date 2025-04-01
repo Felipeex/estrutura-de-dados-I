@@ -1,12 +1,13 @@
 #include <stdio.h>
-#include "headers/fila-com-prioridade.h"
+#include "headers/fila-circular-com-prioridade.h"
+// #include "headers/fila-com-prioridade.h"
 
 #include <windows.h>
 
 Transacao lerTransacao(FILE * arquivoTransacoes);
 void tempoDeEsperaTransacoes(Transacao transacoes[quantidadeDeTransacoesMaxima]);
 void verificandoPrioridade(Transacao transacoes[quantidadeDeTransacoesMaxima], Transacao transacaoInicio);
-void gerandoTempoMedioDeEsperaTransacoes(Transacao transacoes[quantidadeDeTransacoesMaxima], int quantidadeTransacoes);
+void gerandoTempoMedioDeEsperaTransacoes(Transacao transacoesFinalizadas[quantidadeDeTransacoesMaxima], int quantidadeDeTransacoesFinalizadas);
 
 int main() {
   // unidade de tempo = segundo
@@ -25,18 +26,20 @@ int main() {
   filaComPrioridade fila;
   int totalUnidadeDeTempo = 0;
 
+  Transacao transacoesFinalizadas[quantidadeDeTransacoesMaxima];
+  int quantidadeDeTransacoesFinalizadas = 0;
+
   inicializarFila(fila);
   do {
     if (arquivoTransacoes != NULL) {
       printf("\ntotalUnidadeDeTempo = %d\n", totalUnidadeDeTempo);
 
-      if (!(totalUnidadeDeTempo % 3)) {
+      if (!feof(arquivoTransacoes) && !(totalUnidadeDeTempo % 3)) {
         Transacao transacao = lerTransacao(arquivoTransacoes);
         inserirFila(fila, transacao);
       }
 
       Transacao transacaoInicio = filaElementoInicio(fila);
-
       printf("transacaoInicio = %d\n", transacaoInicio.IdUsuario);
 
       if (!transacaoInicio.estaProcessando) {
@@ -48,9 +51,9 @@ int main() {
       fila.transacoes[0] = transacaoInicio;
 
       if (transacaoInicio.duracao <= 0) {
-        retirarFila(fila);
+        transacoesFinalizadas[quantidadeDeTransacoesFinalizadas] = retirarFila(fila);
+        quantidadeDeTransacoesFinalizadas++;
       }
-
 
       verificandoPrioridade(fila.transacoes, transacaoInicio);
       tempoDeEsperaTransacoes(fila.transacoes);
@@ -58,10 +61,9 @@ int main() {
 
       exibirFila(fila);
     }
-    Sleep(1000);
-  } while(!feof(arquivoTransacoes) && arquivoTransacoes != NULL);
-
-  gerandoTempoMedioDeEsperaTransacoes(fila.transacoes, fila.quantidade);
+    // Sleep(1000);
+  } while(!filaEstaVazia(fila) || (!feof(arquivoTransacoes) && arquivoTransacoes != NULL));
+  gerandoTempoMedioDeEsperaTransacoes(transacoesFinalizadas, quantidadeDeTransacoesFinalizadas);
 }
 
 Transacao lerTransacao(FILE * arquivoTransacoes) {
@@ -97,13 +99,13 @@ void verificandoPrioridade(Transacao transacoes[quantidadeDeTransacoesMaxima], T
   }
 }
 
-void gerandoTempoMedioDeEsperaTransacoes(Transacao transacoes[quantidadeDeTransacoesMaxima], int quantidadeTransacoes) {
+void gerandoTempoMedioDeEsperaTransacoes(Transacao transacoesFinalizadas[quantidadeDeTransacoesMaxima], int quantidadeDeTransacoesFinalizadas) {
   int totalTempoMedioDeEspera = 0;
 
   for(int i = 0; i < quantidadeDeTransacoesMaxima; i++) {
-    Transacao transacao = transacoes[i];
+    Transacao transacao = transacoesFinalizadas[i];
     totalTempoMedioDeEspera += transacao.tempoEspera;
   }
 
-  printf("\nTempo médio de espera: %.2f", (float) totalTempoMedioDeEspera / quantidadeTransacoes);
+  printf("\nTempo medio de espera: %.2f", (float) totalTempoMedioDeEspera / quantidadeDeTransacoesFinalizadas);
 }
